@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="vp_month" type="id" />
+    <item name="vp_week" type="id" />
+    <item name="selectLayout" type="id" />
+    <item name="frameContent" type="id" />
+</resources>

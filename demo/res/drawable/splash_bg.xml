@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--<item-->
+    <!--android:drawable="@drawable/welcome_bg"-->
+    <!--android:gravity="center" />-->
+    <item>
+        <bitmap android:src="@drawable/welcome_bg2" />
+    </item>
+    <item
+        android:width="@dimen/dp_60"
+        android:height="@dimen/dp_60"
+        android:gravity="center_horizontal"
+        android:top="@dimen/dp_60">
+        <bitmap
+            android:gravity="top"
+            android:src="@drawable/welcome_logo" />
+    </item>
+</layer-list>

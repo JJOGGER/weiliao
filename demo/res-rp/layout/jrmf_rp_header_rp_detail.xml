@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f1f1f3">
+
+    <FrameLayout
+        android:id="@+id/fl_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rp_detail_bg" />
+
+        <ImageButton
+            android:id="@+id/ibtn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:paddingLeft="16dp"
+            android:paddingTop="16dp"
+            android:paddingRight="40dp"
+            android:paddingBottom="16dp"
+            android:src="@drawable/back" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="66dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginRight="66dp"
+        android:gravity="center_horizontal">
+
+        <com.netease.nim.uikit.common.ui.imageview.HeadImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_logo" />
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:ellipsize="middle"
+            android:gravity="center"
+            android:paddingLeft="16dp"
+            android:textColor="#FEED92"
+            android:textSize="14sp"
+            tools:text="刘洪林的红包" />
+
+        <ImageView
+            android:id="@+id/iv_is_luck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dp"
+            android:src="@drawable/icon_ping"
+            tools:visibility="gone" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_bless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:maxLines="1"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:textColor="#FEED92"
+        android:textSize="14sp"
+        tools:text="恭喜发财,大吉大利恭喜发财,大吉大利恭喜发财,大吉大利恭喜发财,大吉大利恭喜发财,大吉大利恭喜发财,大吉大利" />
+
+    <TextView
+        android:id="@+id/tv_rec_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_bless"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="#FEED92"
+        android:textSize="44sp"
+        android:visibility="gone"
+        tools:text="1.00元" />
+
+    <TextView
+        android:id="@+id/tv_amount_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_rec_amount"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="已存入账户"
+        android:textColor="#FEED92"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_rp_num"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_below="@id/fl_top"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        tools:text="xxxxxxxxx" />
+
+</RelativeLayout>
+
+
+
+
+
+
+
+
+

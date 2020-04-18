@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/messageActivityBottomLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/nim_message_activity_text_layout" />
+
+        <FrameLayout
+            android:id="@+id/fl_forbidden"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:paddingTop="@dimen/bottom_component_margin_vertical"
+            android:paddingBottom="@dimen/bottom_component_margin_vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="群主已开启群禁言"
+                android:textColor="@color/grey" />
+        </FrameLayout>
+    </FrameLayout>
+
+    <com.netease.nim.uikit.business.session.emoji.EmoticonPickerView
+        android:id="@+id/emoticon_picker_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+</LinearLayout>
