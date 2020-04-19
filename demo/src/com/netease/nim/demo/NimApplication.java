@@ -5,8 +5,6 @@ import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.huawei.hms.support.common.ActivityMgr;
 import com.netease.nim.demo.common.util.LogHelper;
 import com.netease.nim.demo.common.util.crash.AppCrashHandler;
@@ -28,7 +26,7 @@ import com.netease.nimlib.sdk.util.NIMUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.yanzhenjie.nohttp.NoHttp;
 
-import io.fabric.sdk.android.Fabric;
+//import io.fabric.sdk.android.Fabric;
 public class NimApplication extends Application {
 
     @Override
@@ -84,12 +82,12 @@ public class NimApplication extends Application {
 //            initRTSKit();
         }
 
-        Crashlytics crashlyticsKit = new Crashlytics.Builder()
-                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-                .build();
+//        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+//                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+//                .build();
 
         // Initialize Fabric with the debug-disabled crashlytics.
-        Fabric.with(this, crashlyticsKit);
+//        Fabric.with(this, crashlyticsKit);
     }
 
     private LoginInfo getLoginInfo() {

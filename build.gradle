@@ -9,7 +9,7 @@ allprojects {
         jcenter()
         mavenCentral()
         maven { url 'http://developer.huawei.com/repo' }
-        maven { url 'https://fabric-artifacts.s3.amazonaws.com/public' }
+//        maven { url 'https://fabric-artifacts.s3.amazonaws.com/public' }
     }
 }
 

@@ -123,7 +123,7 @@
             android:drawablePadding="6dp"
             android:gravity="center"
             android:paddingLeft="12dp"
-            android:text="转出到云信"
+            android:text="转出到微聊"
             android:textColor="@color/black"
             android:textSize="16sp" />
 

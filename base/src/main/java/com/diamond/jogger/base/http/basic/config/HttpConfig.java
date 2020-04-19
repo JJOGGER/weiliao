@@ -24,7 +24,7 @@ public class HttpConfig {
 //        return "http://123.57.224.49:9600/";
 //    }
     public static String getDynamicUrl() {
-        return "http://yunxin777.com:8080/im/";
-//        return "http://wl2013.com:8082/im/";
+//        return "http://yunxin777.com:8080/im/";
+        return "http://wl2013.com:8082/im/";
     }
 }
