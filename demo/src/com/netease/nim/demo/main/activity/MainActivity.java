@@ -421,41 +421,41 @@ public class MainActivity extends UI implements ViewPager.OnPageChangeListener, 
         // 同一个账号的好友申请仅保留最近一条
         SystemMessage del = null;
         if (message.getType() == SystemMessageType.AddFriend) {
-            if (message.getFromAccount().equals(DemoCache.getAccount())) return;
-            AddFriendNotify attachData = (AddFriendNotify) message.getAttachObject();
-            if (attachData != null && attachData.getEvent() == AddFriendNotify.Event.RECV_AGREE_ADD_FRIEND) {
-                CustomNotificationAttachment attachment = new CustomNotificationAttachment();
-                new UserDataSource().getAccount(message.getFromAccount(), new RequestMultiplyCallback<AccountResult>() {
-                    @Override
-                    public void onFail(BaseException e) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(AccountResult accountResult) {
-                        attachment.setContent("已成为你的好友");
-                        attachment.setFromAccount(accountResult.getAccount());
-                        IMMessage customMessage = MessageBuilder.createCustomMessage(message.getFromAccount(), SessionTypeEnum.P2P, attachment);
-// send message to server and save to db
-                        NIMClient.getService(MsgService.class).sendMessage(customMessage, false).setCallback(new RequestCallback<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-
-                            }
-
-                            @Override
-                            public void onFailed(int i) {
-
-                            }
-
-                            @Override
-                            public void onException(Throwable throwable) {
-
-                            }
-                        });
-                    }
-                });
-            }
+//            if (message.getFromAccount().equals(DemoCache.getAccount())) return;
+//            AddFriendNotify attachData = (AddFriendNotify) message.getAttachObject();
+//            if (attachData != null && attachData.getEvent() == AddFriendNotify.Event.RECV_AGREE_ADD_FRIEND) {
+//                CustomNotificationAttachment attachment = new CustomNotificationAttachment();
+//                new UserDataSource().getAccount(message.getFromAccount(), new RequestMultiplyCallback<AccountResult>() {
+//                    @Override
+//                    public void onFail(BaseException e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(AccountResult accountResult) {
+//                        attachment.setContent("已成为你的好友");
+//                        attachment.setFromAccount(accountResult.getAccount());
+//                        IMMessage customMessage = MessageBuilder.createCustomMessage(message.getFromAccount(), SessionTypeEnum.P2P, attachment);
+//// send message to server and save to db
+//                        NIMClient.getService(MsgService.class).sendMessage(customMessage, false).setCallback(new RequestCallback<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onFailed(int i) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onException(Throwable throwable) {
+//
+//                            }
+//                        });
+//                    }
+//                });
+//            }
         }
     }
 

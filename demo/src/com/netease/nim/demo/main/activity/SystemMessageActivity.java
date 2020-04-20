@@ -10,6 +10,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.diamond.jogger.base.entity.AccountResult;
+import com.diamond.jogger.base.http.basic.callback.RequestMultiplyCallback;
+import com.diamond.jogger.base.http.basic.exception.base.BaseException;
+import com.diamond.jogger.base.http.datasource.UserDataSource;
+import com.netease.nim.demo.DemoCache;
+import com.netease.nim.demo.session.extension.CustomNotificationAttachment;
 import com.netease.nim.uikit.common.ToastHelper;
 
 import com.netease.nim.demo.R;
@@ -32,17 +38,25 @@ import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.friend.FriendService;
 import com.netease.nimlib.sdk.friend.model.AddFriendNotify;
+import com.netease.nimlib.sdk.msg.MessageBuilder;
+import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.SystemMessageObserver;
 import com.netease.nimlib.sdk.msg.SystemMessageService;
+import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.constant.SystemMessageStatus;
 import com.netease.nimlib.sdk.msg.constant.SystemMessageType;
+import com.netease.nimlib.sdk.msg.model.CustomMessageConfig;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.SystemMessage;
 import com.netease.nimlib.sdk.team.TeamService;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -397,6 +411,58 @@ public class SystemMessageActivity extends UI implements TAdapterDelegate,
             }
         } else if (message.getType() == SystemMessageType.AddFriend) {
             NIMClient.getService(FriendService.class).ackAddFriendRequest(message.getFromAccount(), pass).setCallback(callback);
+            if (message.getFromAccount().equals(DemoCache.getAccount())) return;
+            AddFriendNotify attachData = (AddFriendNotify) message.getAttachObject();
+            if (attachData != null && attachData.getEvent() == AddFriendNotify.Event.RECV_ADD_FRIEND_VERIFY_REQUEST) {
+                Map<String, Object> content = new HashMap<>(1);
+                content.put("content", "你们已经成为好友了，赶紧聊天吧");
+// 创建tip消息，teamId需要开发者已经存在的team的teamId
+                IMMessage msg = MessageBuilder.createTipMessage(message.getFromAccount(), SessionTypeEnum.P2P);
+                msg.setContent("你们已经成为好友了，赶紧聊天吧");
+                msg.setRemoteExtension(content);
+// 自定义消息配置选项
+                CustomMessageConfig config = new CustomMessageConfig();
+// 消息不计入未读
+                config.enableUnreadCount = false;
+                msg.setConfig(config);
+// 消息发送状态设置为success
+                msg.setStatus(MsgStatusEnum.success);
+// 保存消息到本地数据库，但不发送到服务器
+//                NIMClient.getService(MsgService.class).saveMessageToLocal(msg, true);
+//                IMMessage customMessage = MessageBuilder.createTipMessage(message.getFromAccount(),SessionTypeEnum.P2P,"你们已经成为好友了，赶紧聊天吧");
+                NIMClient.getService(MsgService.class).sendMessage(msg, false).setCallback(new RequestCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+
+                    @Override
+                    public void onFailed(int i) {
+
+                    }
+
+                    @Override
+                    public void onException(Throwable throwable) {
+
+                    }
+                });
+//                CustomNotificationAttachment attachment = new CustomNotificationAttachment();
+//                new UserDataSource().getAccount(message.getFromAccount(), new RequestMultiplyCallback<AccountResult>() {
+//                    @Override
+//                    public void onFail(BaseException e) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onSuccess(AccountResult accountResult) {
+//                        attachment.setContent("你们已经成为好友了，赶紧聊天吧");
+//                        attachment.setFromAccount(accountResult.getAccount());
+//                        IMMessage customMessage = MessageBuilder.createCustomMessage(message.getFromAccount(), SessionTypeEnum.P2P, attachment);
+//// send message to server and save to db
+//
+//                    }
+//                });
+            }
         }
     }
 
