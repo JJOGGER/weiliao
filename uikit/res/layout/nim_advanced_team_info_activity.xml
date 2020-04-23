@@ -64,7 +64,7 @@
 
                 <TextView
                     android:id="@+id/team_id"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/team_name"
@@ -80,6 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/team_id"
                     android:layout_marginLeft="12dip"
+                    android:visibility="gone"
                     android:layout_toRightOf="@id/team_id"
                     android:text="于"
                     android:textColor="@color/color_grey_999999"
@@ -88,6 +89,7 @@
                 <TextView
                     android:id="@+id/team_create_time"
                     android:layout_width="wrap_content"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/temp_text_with"
                     android:layout_toRightOf="@id/temp_text_with"
@@ -98,6 +100,7 @@
                 <TextView
                     android:id="@+id/temp_text_create"
                     android:layout_width="wrap_content"
+                    android:visibility="gone"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/team_create_time"
                     android:layout_toRightOf="@id/team_create_time"
