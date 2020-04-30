@@ -14,6 +14,10 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.alibaba.fastjson.JSON;
+import com.diamond.jogger.base.http.basic.callback.RequestMultiplyCallback;
+import com.diamond.jogger.base.http.basic.exception.base.BaseException;
+import com.diamond.jogger.base.http.datasource.UserDataSource;
+import com.diamond.jogger.base.http.datasource.base.IUserDataSource;
 import com.netease.nim.demo.DemoCache;
 import com.netease.nim.demo.R;
 import com.netease.nim.demo.common.util.sys.SysInfoUtil;
@@ -45,12 +49,13 @@ public class WelcomeActivity extends UI {
     private boolean customSplash = false;
 
     private static boolean firstEnter = true; // 是否首次进入
+    private IUserDataSource mUserDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-
+        mUserDataSource = new UserDataSource();
         DemoCache.setMainTaskLaunching(true);
 
         if (savedInstanceState != null) {
@@ -67,7 +72,7 @@ public class WelcomeActivity extends UI {
     private void showSplashView() {
         // 首次进入，打开欢迎界面
 //        getWindow().setBackgroundDrawableResource(R.drawable.splash_bg);
-        scaleImage(this,findView(R.id.root_view),R.drawable.welcome_bg2);
+        scaleImage(this, findView(R.id.root_view), R.drawable.welcome_bg2);
         customSplash = true;
     }
 
@@ -84,7 +89,8 @@ public class WelcomeActivity extends UI {
             onIntent();
         }
     }
-    public  void scaleImage(final Activity activity, final View view, int drawableResId) {
+
+    public void scaleImage(final Activity activity, final View view, int drawableResId) {
 
         // 获取屏幕的高宽
         Point outSize = new Point();
@@ -134,40 +140,55 @@ public class WelcomeActivity extends UI {
 
                 // 设置图片显示
                 view.setBackgroundDrawable(new BitmapDrawable(getResources(), finallyBitmap));
-                Log.e(TAG,"-------------><"+getPackageName());
+                Log.e(TAG, "-------------><" + getPackageName());
                 return true;
             }
         });
     }
+
     @Override
     protected void onResume() {
         super.onResume();
 
         if (firstEnter) {
             firstEnter = false;
-            Runnable runnable = new Runnable() {
+            mUserDataSource.isSmsSwitch(new RequestMultiplyCallback<Object>() {
                 @Override
-                public void run() {
-                    if (!NimUIKit.isInitComplete()) {
-                        LogUtil.i(TAG, "wait for uikit cache!");
-                        new Handler().postDelayed(this, 100);
-                        return;
-                    }
-
-                    customSplash = false;
-                    if (canAutoLogin()) {
-                        onIntent();
-                    } else {
-                        LoginActivity.start(WelcomeActivity.this);
-                        finish();
-                    }
+                public void onFail(BaseException e) {
+                    init();
                 }
-            };
-            if (customSplash) {
-                new Handler().postDelayed(runnable, 1000);
-            } else {
-                runnable.run();
+
+                @Override
+                public void onSuccess(Object o) {
+                    init();
+                }
+            });
+        }
+    }
+
+    private void init() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!NimUIKit.isInitComplete()) {
+                    LogUtil.i(TAG, "wait for uikit cache!");
+                    new Handler().postDelayed(this, 100);
+                    return;
+                }
+
+                customSplash = false;
+                if (canAutoLogin()) {
+                    onIntent();
+                } else {
+                    LoginActivity.start(WelcomeActivity.this);
+                    finish();
+                }
             }
+        };
+        if (customSplash) {
+            new Handler().postDelayed(runnable, 1000);
+        } else {
+            runnable.run();
         }
     }
 

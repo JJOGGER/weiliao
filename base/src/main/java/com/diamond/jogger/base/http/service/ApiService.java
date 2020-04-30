@@ -29,8 +29,19 @@ import retrofit2.http.Query;
  */
 public interface ApiService {
 
+    @POST("user/message/switch")
+    Observable<BaseResponse<Object>> isSmsSwitch();
+
+    @POST("user/send/code")
+    Observable<BaseResponse<Object>> sendSmsCode(@Query("phone") String phone);
+
+    @POST("user/verufy/code")
+    Observable<BaseResponse<Object>> checkSmsCode(@Query("code") String code,
+                                                  @Query("phone") String phone);
+
     @POST("user/create")
-    Observable<BaseResponse<Object>> register(@Query("account") String account,
+    Observable<BaseResponse<Object>> register(@Query("phone") String phone,
+                                              @Query("account") String account,
                                               @Query("name") String name,
                                               @Query("password") String password);
 
@@ -38,6 +49,7 @@ public interface ApiService {
     Observable<BaseResponse<LoginResult>> login(@Query("account") String account,
                                                 @Query("password") String password,
                                                 @Query("websiteType") int website);
+
 
     @POST("user/info/get")
     Observable<BaseResponse<SimpleUserInfo>> getUserInfo(@Query("account") String account,
@@ -122,7 +134,7 @@ public interface ApiService {
     Observable<BaseResponse<Object>> addGroup(@Query("account") String account, @Query("groupName") String groupName);
 
     @POST("friend/group/delete")
-    Observable<BaseResponse<Object>> deleteGroup( @Query("id") String id);
+    Observable<BaseResponse<Object>> deleteGroup(@Query("id") String id);
 
     @POST("friend/group/list")
     Observable<BaseResponse<List<GroupData>>> getGroupList(@Query("account") String account);

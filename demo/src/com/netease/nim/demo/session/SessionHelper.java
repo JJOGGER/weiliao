@@ -7,10 +7,12 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.diamond.jogger.base.entity.TeamActionInfo;
+import com.diamond.jogger.base.event.AitEvent;
 import com.netease.nim.demo.DemoCache;
 import com.netease.nim.demo.R;
 import com.netease.nim.demo.contact.activity.RobotProfileActivity;
 import com.netease.nim.demo.contact.activity.UserProfileActivity;
+import com.netease.nim.demo.main.model.Extras;
 import com.netease.nim.demo.redpacket.NIMRedPacketClient;
 import com.netease.nim.demo.session.action.RedPacketAction;
 import com.netease.nim.demo.session.action.SnapChatAction;
@@ -48,6 +50,11 @@ import com.netease.nim.uikit.business.session.module.MsgRevokeFilter;
 import com.netease.nim.uikit.business.session.viewholder.MsgViewHolderUnknown;
 import com.netease.nim.uikit.business.team.model.TeamExtras;
 import com.netease.nim.uikit.business.team.model.TeamRequestCode;
+import com.netease.nim.uikit.business.uinfo.UserInfoHelper;
+import com.netease.nim.uikit.common.ToastHelper;
+import com.netease.nim.uikit.common.ui.dialog.CustomAlertDialog;
+import com.netease.nim.uikit.common.ui.dialog.DialogMaker;
+import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialog;
 import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialogHelper;
 import com.netease.nim.uikit.common.ui.popupmenu.NIMPopupMenu;
 import com.netease.nim.uikit.common.ui.popupmenu.PopupMenuItem;
@@ -55,6 +62,7 @@ import com.netease.nim.uikit.common.util.sys.TimeUtil;
 import com.netease.nim.uikit.impl.cache.TeamDataCache;
 import com.netease.nim.uikit.impl.customization.DefaultRecentCustomization;
 import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.avchat.constant.AVChatRecordState;
 import com.netease.nimlib.sdk.avchat.constant.AVChatType;
 import com.netease.nimlib.sdk.avchat.model.AVChatAttachment;
@@ -69,8 +77,13 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.LocalAntiSpamResult;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.robot.model.RobotAttachment;
+import com.netease.nimlib.sdk.team.TeamService;
+import com.netease.nimlib.sdk.team.constant.TeamMemberType;
 import com.netease.nimlib.sdk.team.constant.TeamTypeEnum;
 import com.netease.nimlib.sdk.team.model.Team;
+import com.netease.nimlib.sdk.team.model.TeamMember;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,7 +205,7 @@ public class SessionHelper {
 //            actions.add(new FileAction());
 //            actions.add(new TipAction());
             if (NIMRedPacketClient.isEnable()) {
-            actions.add(new RedPacketAction());// TODO: 2019/12/20
+                actions.add(new RedPacketAction());// TODO: 2019/12/20
             }
             p2pCustomization.actions = actions;
             p2pCustomization.withSticker = true;
@@ -408,7 +421,7 @@ public class SessionHelper {
 //            actions.add(new GuessAction());
 //            actions.add(new FileAction());
             if (NIMRedPacketClient.isEnable()) {
-            actions.add(new RedPacketAction()); // TODO: 2019/12/20
+                actions.add(new RedPacketAction()); // TODO: 2019/12/20
             }
 //            actions.add(new TipAction());
 
@@ -450,7 +463,7 @@ public class SessionHelper {
 //            actions.add(new FileAction());
 //            actions.add(new AckMessageAction());//已读回执
             if (NIMRedPacketClient.isEnable()) {
-            actions.add(new RedPacketAction()); // TODO: 2019/12/20
+                actions.add(new RedPacketAction()); // TODO: 2019/12/20
             }
 //            actions.add(new TipAction());
 
@@ -543,6 +556,79 @@ public class SessionHelper {
             @Override
             public void onAvatarLongClicked(Context context, IMMessage message) {
                 // 一般用于群组@功能，或者弹出菜单，做拉黑，加好友等功能
+                //如果不是管理员和群主，直接@
+                if (message.getFromAccount().equals(NimUIKit.getAccount())) return;
+                if (message.getSessionType() == SessionTypeEnum.Team) {
+                    Team teamById = TeamDataCache.getInstance().getTeamById(message.getSessionId());
+                    if (teamById == null) return;
+                    TeamMember teamMember = TeamDataCache.getInstance().getTeamMember(message.getSessionId(), message.getFromAccount());//群成员信息
+                    String name = "";
+                    boolean isPermission = false;
+                    TeamMember meMember = TeamDataCache.getInstance().getTeamMember(message.getSessionId(), DemoCache.getAccount());
+                    if (meMember == null) return;
+                    if (meMember.getType() == TeamMemberType.Owner) {
+                        //本人是群主，拥有权限
+                        isPermission = true;
+                    } else {
+                        //本人是管理员，对方不是管理员或群主，拥有权限
+                        if (meMember.getType() == TeamMemberType.Manager && teamMember.getType() != TeamMemberType.Owner && teamMember.getType() != TeamMemberType.Manager) {
+                            isPermission = true;
+                        }
+                    }
+                    if (isPermission) {
+                        CustomAlertDialog alertDialog = new CustomAlertDialog(context);
+                        alertDialog.setCancelable(true);
+                        alertDialog.setCanceledOnTouchOutside(true);
+                        alertDialog.addItem("@他/她", () -> {
+                            if (teamMember == null) return;
+                            String name1 = getAitTeamMemberName(teamMember);
+                            AitEvent aitEvent = new AitEvent(0);
+                            aitEvent.putExtra(Extras.EXTRA_ACCOUNT, teamMember.getAccount());
+                            aitEvent.putExtra(Extras.NAME, name1);
+                            EventBus.getDefault().post(aitEvent);
+                        });
+                        boolean isMute = NimUIKit.getTeamProvider().getTeamMember(message.getSessionId(), message.getFromAccount()).isMute();
+                        String mute = isMute ? "取消禁言" : "设置禁言";
+                        alertDialog.addItem(mute, () -> {
+                            NIMClient.getService(TeamService.class).muteTeamMember(message.getSessionId(), message.getFromAccount(), !isMute).setCallback(new RequestCallback<Void>() {
+                                @Override
+                                public void onSuccess(Void param) {
+                                    if (!isMute) {
+                                        ToastHelper.showToast(context, "群禁言成功");
+                                    } else {
+                                        ToastHelper.showToast(context, "取消群禁言成功");
+                                    }
+                                }
+
+                                @Override
+                                public void onFailed(int code) {
+                                    if (code == 408) {
+                                        ToastHelper.showToast(context, com.netease.nim.uikit.R.string.network_is_not_available);
+                                    } else {
+                                        ToastHelper.showToast(context, "on failed:" + code);
+                                    }
+                                }
+
+                                @Override
+                                public void onException(Throwable exception) {
+
+                                }
+                            });
+                        });
+                        alertDialog.addItem("移出本群", () -> {
+                            showConfirmButton(context, message.getSessionId(), message.getFromAccount());
+                        });
+                        alertDialog.show();
+                    } else {
+                        if (teamMember == null) return;
+                        name = getAitTeamMemberName(teamMember);
+                        AitEvent aitEvent = new AitEvent(0);
+                        aitEvent.putExtra(Extras.EXTRA_ACCOUNT, teamMember.getAccount());
+                        aitEvent.putExtra(Extras.NAME, name);
+                        EventBus.getDefault().post(aitEvent);
+                    }
+
+                }
             }
 
             @Override
@@ -555,6 +641,62 @@ public class SessionHelper {
         NimUIKit.setSessionListener(listener);
     }
 
+    /**
+     * 移除群成员确认
+     */
+    private static void showConfirmButton(Context context, String sessionId, String account) {
+        EasyAlertDialogHelper.OnDialogActionListener listener = new EasyAlertDialogHelper.OnDialogActionListener() {
+
+            @Override
+            public void doCancelAction() {
+            }
+
+            @Override
+            public void doOkAction() {
+                removeMember(context, sessionId, account);
+            }
+        };
+        final EasyAlertDialog dialog = EasyAlertDialogHelper.createOkCancelDiolag(context, null, context.getString(com.netease.nim.uikit.R.string.team_member_remove_confirm),
+                context.getString(com.netease.nim.uikit.R.string.remove), context.getString(com.netease.nim.uikit.R.string.cancel), true, listener);
+        dialog.show();
+    }
+
+    /**
+     * 移除群成员
+     */
+    private static void removeMember(Context context, String teamId, String account) {
+        DialogMaker.showProgressDialog(context, context.getString(com.netease.nim.uikit.R.string.empty));
+        NIMClient.getService(TeamService.class).removeMember(teamId, account).setCallback(new RequestCallback<Void>() {
+            @Override
+            public void onSuccess(Void param) {
+                DialogMaker.dismissProgressDialog();
+                ToastHelper.showToastLong(context, com.netease.nim.uikit.R.string.update_success);
+            }
+
+            @Override
+            public void onFailed(int code) {
+                DialogMaker.dismissProgressDialog();
+                ToastHelper.showToastLong(context, String.format(context.getString(com.netease.nim.uikit.R.string.update_failed), code));
+            }
+
+            @Override
+            public void onException(Throwable exception) {
+                DialogMaker.dismissProgressDialog();
+            }
+        });
+    }
+
+    // 群昵称 > 用户昵称 > 账号
+    private static String getAitTeamMemberName(TeamMember member) {
+        if (member == null) {
+            return "";
+        }
+        String memberNick = member.getTeamNick();
+        if (!TextUtils.isEmpty(memberNick)) {
+            return memberNick;
+        }
+        return UserInfoHelper.getUserName(member.getAccount());
+    }
 
     /**
      * 消息转发过滤器

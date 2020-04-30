@@ -10,4 +10,5 @@ public interface Extras {
     String MESSAGE = "message";
     String RED_PACKET_DETAIL = "red_packet_detail";
     String TYPE = "type";
+    String NAME = "name";
 }

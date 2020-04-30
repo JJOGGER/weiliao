@@ -29,7 +29,6 @@ import com.netease.nim.uikit.api.NimUIKit;
 import com.netease.nim.uikit.common.ToastHelper;
 import com.netease.nim.uikit.common.activity.UI;
 import com.netease.nim.uikit.common.ui.dialog.DialogMaker;
-import com.netease.nim.uikit.common.ui.dialog.EasyAlertDialogHelper;
 import com.netease.nim.uikit.common.ui.widget.ClearableEditTextWithIcon;
 import com.netease.nim.uikit.common.util.log.LogUtil;
 import com.netease.nim.uikit.common.util.sys.NetworkUtil;
@@ -41,8 +40,6 @@ import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.StatusBarNotificationConfig;
-import com.netease.nimlib.sdk.auth.AuthService;
-import com.netease.nimlib.sdk.auth.ClientType;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 
 import org.greenrobot.eventbus.EventBus;
@@ -55,7 +52,8 @@ import org.greenrobot.eventbus.EventBus;
 public class RegistActivity extends UI implements OnKeyListener {
 
     private static final String TAG = RegistActivity.class.getSimpleName();
-    private static final String KICK_OUT = "KICK_OUT";
+    private static final String PHONE = "phone";
+    private static final String CODE = "code";
     private final int BASIC_PERMISSION_REQUEST_CODE = 110;
 
 
@@ -63,20 +61,16 @@ public class RegistActivity extends UI implements OnKeyListener {
     private ClearableEditTextWithIcon registerNickNameEdit;
     private ClearableEditTextWithIcon registerPasswordEdit;
 
-    private View registerLayout;
 
     private AbortableFuture<LoginInfo> loginRequest;
     private View btnRegist;
     private View btnLogin;
 
-    public static void start(Context context) {
-        start(context, false);
-    }
 
-    public static void start(Context context, boolean kickOut) {
+    public static void start(Context context, String phone, String code) {
         Intent intent = new Intent(context, RegistActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra(KICK_OUT, kickOut);
+        intent.putExtra(PHONE, phone);
+        intent.putExtra(CODE, code);
         context.startActivity(intent);
     }
 
@@ -95,8 +89,6 @@ public class RegistActivity extends UI implements OnKeyListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.regist_activity);
         requestBasicPermission();
-
-        onParseIntent();
         setupRegisterPanel();
     }
 
@@ -131,41 +123,11 @@ public class RegistActivity extends UI implements OnKeyListener {
         ToastHelper.showToast(this, "授权失败");
     }
 
-    private void onParseIntent() {
-        if (!getIntent().getBooleanExtra(KICK_OUT, false)) {
-            return;
-        }
-        int type = NIMClient.getService(AuthService.class).getKickedClientType();
-        String client;
-        switch (type) {
-            case ClientType.Web:
-                client = "网页端";
-                break;
-            case ClientType.Windows:
-            case ClientType.MAC:
-                client = "电脑端";
-                break;
-            case ClientType.REST:
-                client = "服务端";
-                break;
-            default:
-                client = "移动端";
-                break;
-        }
-        EasyAlertDialogHelper.showOneButtonDiolag(RegistActivity.this,
-                getString(R.string.kickout_notify),
-                String.format(getString(R.string.kickout_content), client),
-                getString(R.string.ok),
-                true,
-                null);
-
-    }
 
     /**
      * 注册面板
      */
     private void setupRegisterPanel() {
-        registerLayout = findView(R.id.register_layout);
         registerAccountEdit = findView(R.id.edit_register_account);
         registerNickNameEdit = findView(R.id.edit_register_nickname);
         btnRegist = findView(R.id.btn_regist);
@@ -268,8 +230,9 @@ public class RegistActivity extends UI implements OnKeyListener {
         final String account = registerAccountEdit.getText().toString();
         final String nickName = registerNickNameEdit.getText().toString();
         final String password = registerPasswordEdit.getText().toString();
+        String phone="";
         IUserDataSource userDataSource = new UserDataSource();
-        userDataSource.register(account, nickName, password, new RequestMultiplyCallback<Object>() {
+        userDataSource.register(phone,account, nickName, password, new RequestMultiplyCallback<Object>() {
             @Override
             public void onFail(BaseException e) {
                 ToastHelper.showToast(RegistActivity.this, e.getMessage());

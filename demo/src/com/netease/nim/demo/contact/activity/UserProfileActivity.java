@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.diamond.jogger.base.entity.AccountResult;
+import com.diamond.jogger.base.entity.GroupData;
 import com.diamond.jogger.base.http.basic.callback.RequestMultiplyCallback;
 import com.diamond.jogger.base.http.basic.exception.base.BaseException;
 import com.diamond.jogger.base.http.datasource.UserDataSource;
@@ -52,7 +53,6 @@ import com.netease.nimlib.sdk.friend.model.MuteListChangedNotify;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
-import com.netease.nimlib.sdk.uinfo.UserInfoProvider;
 import com.netease.nimlib.sdk.uinfo.constant.GenderEnum;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 
@@ -201,6 +201,8 @@ public class UserProfileActivity extends UI {
         ((TextView) signatureLayout.findViewById(R.id.attribute)).setText(R.string.signature);
         ((TextView) aliasLayout.findViewById(R.id.attribute)).setText(R.string.alias);
         ((TextView) setGroupLayout.findViewById(R.id.attribute)).setText("设置分组");
+        GroupData groupData = NimUIKit.getContactProvider().getGroupData(accid);
+        LogUtil.e(UserProfileActivity.TAG,"------groupData:"+groupData);
         addFriendBtn.setOnClickListener(onClickListener);
         chatBtn.setOnClickListener(onClickListener);
         removeFriendBtn.setOnClickListener(onClickListener);

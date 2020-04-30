@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="59dp"
+        android:background="@drawable/ic_logo"
+        android:contentDescription="@string/empty" />
+
+
+    <LinearLayout
+        android:id="@+id/register_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical">
+
+        <com.netease.nim.uikit.common.ui.widget.ClearableEditTextWithIcon
+            android:id="@+id/edit_register_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:background="@drawable/et_underline_unselected"
+            android:digits="1234567890"
+            android:drawableLeft="@drawable/selector_login_user"
+            android:drawablePadding="15dp"
+            android:hint="请输入手机号码"
+            android:inputType="phone"
+            android:padding="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/color_grey_666666"
+            android:textCursorDrawable="@null"
+            android:textSize="16sp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.netease.nim.uikit.common.ui.widget.ClearableEditTextWithIcon
+                android:id="@+id/edit_register_sms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="32dp"
+                android:layout_weight="1"
+                android:background="@drawable/et_underline_unselected"
+                android:digits="1234567890"
+                android:drawableLeft="@drawable/selector_login_nickname"
+                android:drawablePadding="15dp"
+                android:hint="请输入验证码"
+                android:inputType="number"
+                android:padding="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/color_grey_666666"
+                android:textCursorDrawable="@null"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/get_sms"
+                android:layout_width="100dp"
+                android:layout_height="36dp"
+                android:layout_gravity="bottom"
+                android:layout_marginRight="32dp"
+                android:background="@color/color_red_ccfa3c55"
+                android:text="获取验证码"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btn_next"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="32dp"
+            android:background="@color/colorPrimary"
+            android:text="下一步"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="32dp"
+            android:background="@color/color_red_ccfa3c55"
+            android:text="已有账号立即登录"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/register_login_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dip"
+        android:padding="15dip"
+        android:text="@string/register"
+        android:textColor="@drawable/register_tip_selector"
+        android:textSize="15sp" />
+</LinearLayout>

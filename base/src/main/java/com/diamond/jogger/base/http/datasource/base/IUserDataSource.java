@@ -13,7 +13,13 @@ import com.diamond.jogger.base.http.basic.callback.RequestMultiplyCallback;
 import java.util.List;
 
 public interface IUserDataSource {
-    void register(String account, String name, String password, RequestMultiplyCallback<Object> callback);
+    void isSmsSwitch(RequestMultiplyCallback<Object> callback);
+
+    void getSmsCode(String phone, RequestMultiplyCallback<Object> callback);
+
+    void checkSmsCode(String code, String phone, RequestMultiplyCallback<Object> callback);
+
+    void register(String phone,String account, String name, String password, RequestMultiplyCallback<Object> callback);
 
     void login(String account, String password, RequestMultiplyCallback<LoginResult> callback);
 

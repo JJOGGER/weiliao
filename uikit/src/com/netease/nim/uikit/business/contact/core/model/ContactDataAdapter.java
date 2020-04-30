@@ -39,7 +39,7 @@ public class ContactDataAdapter extends BaseAdapter {
     private final SparseArray<Class<? extends AbsContactViewHolder<? extends AbsContactItem>>> viewHolderMap;
 
     private final ContactGroupStrategy groupStrategy;
-    private boolean isSort=true;
+    private boolean isSort = true;
 
     private final IContactDataProvider dataProvider;
 
@@ -57,13 +57,15 @@ public class ContactDataAdapter extends BaseAdapter {
         this.dataProvider = dataProvider;
         this.viewHolderMap = new SparseArray<>(6);
     }
-    public ContactDataAdapter(Context context, ContactGroupStrategy groupStrategy, IContactDataProvider dataProvider,boolean isSort) {
+
+    public ContactDataAdapter(Context context, ContactGroupStrategy groupStrategy, IContactDataProvider dataProvider, boolean isSort) {
         this.context = context;
         this.groupStrategy = groupStrategy;
-        this.isSort=isSort;
+        this.isSort = isSort;
         this.dataProvider = dataProvider;
         this.viewHolderMap = new SparseArray<>(6);
     }
+
     public void addViewHolder(int itemDataType, Class<? extends AbsContactViewHolder<? extends AbsContactItem>> viewHolder) {
         this.viewHolderMap.put(itemDataType, viewHolder);
     }
@@ -142,8 +144,6 @@ public class ContactDataAdapter extends BaseAdapter {
                     holder.create(context);
 
 
-
-
                 }
             }
         } catch (Exception e) {
@@ -206,14 +206,14 @@ public class ContactDataAdapter extends BaseAdapter {
             }
         }
 
-        Task task = new Task(new ContactDataTask(query, dataProvider, filter,isSort) {
+        Task task = new Task(new ContactDataTask(query, dataProvider, filter, isSort) {
             @Override
             protected void onPreProvide(AbsContactDataList datas) {
                 List<? extends AbsContactItem> itemsND = onNonDataItems();
 
                 if (itemsND != null) {
                     for (AbsContactItem item : itemsND) {
-                        datas.add(item,isSort);
+                        datas.add(item, isSort);
                     }
                 }
             }
@@ -258,7 +258,7 @@ public class ContactDataAdapter extends BaseAdapter {
 
         @Override
         protected Void doInBackground(Void... params) {
-            task.run(new ContactDataList(groupStrategy,isSort));
+            task.run(new ContactDataList(groupStrategy, isSort));
 
             return null;
         }

@@ -3,10 +3,13 @@ package com.netease.nim.uikit.business.team.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
+import android.widget.EditText;
 
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.NimUIKit;
@@ -35,7 +38,8 @@ import java.util.List;
  * Created by hzxuwen on 2015/3/17.
  */
 public class AdvancedTeamMemberActivity extends UI implements TAdapterDelegate,
-        TeamMemberAdapter.RemoveMemberCallback, TeamMemberAdapter.AddMemberCallback, TeamMemberHolder.TeamMemberHolderEventListener {
+        TeamMemberAdapter.RemoveMemberCallback, TeamMemberAdapter.AddMemberCallback,
+        TeamMemberHolder.TeamMemberHolderEventListener, TextWatcher {
 
     // constant
     private static final String EXTRA_ID = "EXTRA_ID";
@@ -55,6 +59,7 @@ public class AdvancedTeamMemberActivity extends UI implements TAdapterDelegate,
     private boolean isSelfManager = false;
     private boolean isMemberChange = false;
     private UserInfoObserver userInfoObserver;
+    private EditText etSearch;
 
     public static void startActivityForResult(Activity context, String tid, int resCode) {
         Intent intent = new Intent();
@@ -70,7 +75,8 @@ public class AdvancedTeamMemberActivity extends UI implements TAdapterDelegate,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nim_team_member_grid_layout);
-
+        etSearch = findView(R.id.et_search);
+        etSearch.addTextChangedListener(this);
         ToolBarOptions options = new NimToolBarOptions();
         options.titleId = R.string.team_member;
         setToolBar(R.id.toolbar, options);
@@ -197,7 +203,7 @@ public class AdvancedTeamMemberActivity extends UI implements TAdapterDelegate,
             }
             this.memberAccounts.add(tm.getAccount());
         }
-
+        etSearch.setVisibility(isSelfAdmin || isSelfManager ? View.VISIBLE : View.GONE);
         updateTeamMemberDataSource();
     }
 
@@ -370,5 +376,33 @@ public class AdvancedTeamMemberActivity extends UI implements TAdapterDelegate,
         } else {
             NimUIKit.getUserInfoObservable().registerObserver(userInfoObserver, false);
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+        if (TextUtils.isEmpty(s.toString().trim())) {
+            updateTeamMemberDataSource();
+            return;
+        }
+        dataSource.clear();
+        for (int i = 0; i < members.size(); i++) {
+            TeamMember item = members.get(i);
+            String teamMemberDisplayName = TeamHelper.getTeamMemberDisplayName(item.getTid(), item.getAccount());
+            if (teamMemberDisplayName.toLowerCase().contains(s.toString().toLowerCase())) {
+                dataSource.add(new TeamMemberItem(TeamMemberAdapter.TeamMemberItemTag
+                        .NORMAL, teamId, item.getAccount(), initMemberIdentity(item.getAccount())));
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 }

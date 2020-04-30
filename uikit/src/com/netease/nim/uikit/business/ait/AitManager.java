@@ -7,10 +7,16 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 
+import com.diamond.jogger.base.event.AitEvent;
 import com.netease.nim.uikit.business.ait.selector.AitContactSelectorActivity;
+import com.netease.nim.uikit.business.session.constant.Extras;
 import com.netease.nim.uikit.business.uinfo.UserInfoHelper;
 import com.netease.nimlib.sdk.robot.model.NimRobotInfo;
 import com.netease.nimlib.sdk.team.model.TeamMember;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -39,6 +45,8 @@ public class AitManager implements TextWatcher {
         this.tid = tid;
         this.robot = robot;
         aitContactsModel = new AitContactsModel();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
     }
 
     public void setTextChangeListener(AitTextChangeListener listener) {
@@ -68,6 +76,12 @@ public class AitManager implements TextWatcher {
         curPos = 0;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAitEvent(AitEvent aitEvent){
+        String account = aitEvent.getStringExtra(Extras.EXTRA_ACCOUNT);
+        String name = aitEvent.getStringExtra(Extras.NAME);
+        insertAitMemberInner(account, name, AitContactType.TEAM_MEMBER, curPos, true);
+    }
     /**
      * ------------------------------ 增加@成员 --------------------------------------
      */

@@ -18,14 +18,19 @@ import com.netease.nim.uikit.business.contact.core.query.TextQuery;
 import com.netease.nim.uikit.business.contact.core.util.ContactHelper;
 import com.netease.nim.uikit.common.util.log.LogUtil;
 import com.netease.nim.uikit.impl.cache.UIKitLogTag;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.friend.FriendService;
+import com.netease.nimlib.sdk.friend.constant.FriendFieldEnum;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.netease.nimlib.sdk.uinfo.model.UserInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 final class UserDataProvider {
 
@@ -79,6 +84,25 @@ final class UserDataProvider {
                         //找到分组
                         list.add(new ContactItem(ContactHelper.makeContactFromUserInfo(next), ItemTypes.FRIEND));
                         iterator.remove();
+                    } else {
+                        //用户设了分组，但是分组不存在于服务器,则把用户归类为默认分组
+                        boolean existInGroup = false;
+                        for (int j = 0; j < UserDataSource.getGroupDatasCache().size(); j++) {
+                            GroupData gd = UserDataSource.getGroupDatasCache().get(j);
+                            if (gd.getId().equals(groupData.getId())) {
+                                existInGroup = true;
+                                break;
+                            }
+                        }
+                        if (!existInGroup) {
+                            Map<FriendFieldEnum, Object> map = new HashMap<>();
+                            Map<String, Object> exts = new HashMap<>();
+                            exts.put("ext", "");
+                            map.put(FriendFieldEnum.EXTENSION, exts);
+                            NIMClient.getService(FriendService.class).updateFriendFields(next.getAccount(), map);
+                            list.add(new ContactItem(ContactHelper.makeContactFromUserInfo(next), ItemTypes.FRIEND));
+                            iterator.remove();
+                        }
                     }
                 }
 

@@ -80,6 +80,7 @@ public class ContactSelectActivity extends UI implements View.OnClickListener, a
     private GridView imageSelectedGridView;
 
     private Button btnSelect;
+    private Button btnSelectAll;
 
     private SearchView searchView;
 
@@ -88,6 +89,7 @@ public class ContactSelectActivity extends UI implements View.OnClickListener, a
     private String queryText;
 
     private Option option;
+    private boolean isSelectAll;
 
 
     // class
@@ -143,7 +145,7 @@ public class ContactSelectActivity extends UI implements View.OnClickListener, a
         /**
          * 最大可选人数
          */
-        public int maxSelectNum = 2000;
+        public int maxSelectNum = Integer.MAX_VALUE;
 
         /**
          * 超过最大可选人数的提示
@@ -438,12 +440,14 @@ public class ContactSelectActivity extends UI implements View.OnClickListener, a
 
     private void initContactSelectArea() {
         btnSelect = (Button) findViewById(R.id.btnSelect);
+        btnSelectAll = findView(R.id.btn_select_all);
         if (!option.allowSelectEmpty) {
             btnSelect.setEnabled(false);
         } else {
             btnSelect.setEnabled(true);
         }
         btnSelect.setOnClickListener(this);
+        btnSelectAll.setOnClickListener(this);
         bottomPanel = (RelativeLayout) findViewById(R.id.rlCtrl);
         scrollViewSelected = (HorizontalScrollView) findViewById(R.id.contact_select_area);
         if (option.multi) {
@@ -454,6 +458,7 @@ public class ContactSelectActivity extends UI implements View.OnClickListener, a
             } else {
                 scrollViewSelected.setVisibility(View.GONE);
                 btnSelect.setVisibility(View.GONE);
+                btnSelectAll.setVisibility(View.GONE);
             }
             btnSelect.setText(getOKBtnText(0));
         } else {
@@ -568,6 +573,51 @@ public class ContactSelectActivity extends UI implements View.OnClickListener, a
                 }
                 onSelected(selectedAccounts);
             }
+
+        } else if (v.getId() == R.id.btn_select_all) {
+            for (int i = 0; i < contactAdapter.getCount(); i++) {
+                if (isSelectAll) {
+                    Object item = contactAdapter.getItem(i);
+                    if (!contactAdapter.isEnabled(i)) {
+                        continue;
+                    }
+                    if (!contactAdapter.isSelected(i)) {
+                        continue;
+                    }
+                    contactAdapter.cancelItem(i);
+                    IContact contact = null;
+                    if (item instanceof ContactItem) {
+                        contact = ((ContactItem) item).getContact();
+                    }
+                    if (contact != null) {
+                        contactSelectedAdapter.removeContact(contact);
+                    }
+                } else {
+                    Object item = contactAdapter.getItem(i);
+                    if (!contactAdapter.isEnabled(i)) {
+                        continue;
+                    }
+                    if (contactAdapter.isSelected(i)) {
+                        continue;
+                    }
+                    IContact contact = null;
+                    if (item instanceof ContactItem) {
+                        contact = ((ContactItem) item).getContact();
+                    }
+                    contactAdapter.selectItem(i);
+                    if (contact != null) {
+                        contactSelectedAdapter.addContact(contact);
+                    }
+                    if (!TextUtils.isEmpty(queryText) && searchView != null) {
+                        searchView.setQuery("", true);
+                        searchView.setIconified(true);
+                        showKeyboard(false);
+                    }
+                }
+                arrangeSelected();
+            }
+            isSelectAll = !isSelectAll;
+            btnSelectAll.setText(isSelectAll ? "取消全选" : "全选");
 
         }
     }

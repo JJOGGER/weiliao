@@ -26,7 +26,6 @@ import com.netease.nimlib.sdk.util.NIMUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.yanzhenjie.nohttp.NoHttp;
 
-//import io.fabric.sdk.android.Fabric;
 public class NimApplication extends Application {
 
     @Override

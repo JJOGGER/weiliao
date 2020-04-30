@@ -113,7 +113,7 @@ public class MineFragment extends TFragment {
         TextView tvAccount = findView(R.id.tv_account);
         tvAmount = findView(R.id.tv_amount);
         findView(R.id.fl_group_send).setOnClickListener(v -> {
-            ContactSelectActivity.Option advancedOption = TeamHelper.getCreateContactSelectOption(null, 50);
+            ContactSelectActivity.Option advancedOption = TeamHelper.getCreateContactSelectOption(null, Integer.MAX_VALUE);
             advancedOption.isGroupSendHelper = true;
             NimUIKit.startContactSelector(getContext(), advancedOption, 0);
         });
