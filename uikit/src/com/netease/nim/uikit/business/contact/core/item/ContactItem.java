@@ -8,6 +8,24 @@ import com.netease.nim.uikit.business.contact.core.query.TextComparator;
 
 public class ContactItem extends AbsContactItem implements Comparable<ContactItem> {
     private final IContact contact;
+    private boolean isHide=true;
+    private int position;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public boolean isHide() {
+        return isHide;
+    }
+
+    public void setHide(boolean hide) {
+        isHide = hide;
+    }
 
     private final int dataItemType;
 

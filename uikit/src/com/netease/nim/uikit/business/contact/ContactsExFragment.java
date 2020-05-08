@@ -29,6 +29,7 @@ import com.netease.nim.uikit.business.contact.core.item.AbsContactItem;
 import com.netease.nim.uikit.business.contact.core.item.ContactItem;
 import com.netease.nim.uikit.business.contact.core.item.ItemTypes;
 import com.netease.nim.uikit.business.contact.core.model.ContactDataCommonAdapter;
+import com.netease.nim.uikit.business.contact.core.model.ContactDataExCommonAdapter;
 import com.netease.nim.uikit.business.contact.core.model.ContactGroupStrategy;
 import com.netease.nim.uikit.business.contact.core.provider.ContactExDataProvider;
 import com.netease.nim.uikit.business.contact.core.query.IContactDataProvider;
@@ -59,9 +60,9 @@ import java.util.Set;
  */
 public class ContactsExFragment extends TFragment {
 
-    private ContactDataCommonAdapter adapter;
+    private ContactDataExCommonAdapter adapter;
 
-//    private ListView listView;
+    //    private ListView listView;
     private RecyclerView rvMain;
     private TextView countText;
 
@@ -134,7 +135,7 @@ public class ContactsExFragment extends TFragment {
     private void initAdapter() {
         IContactDataProvider dataProvider = new ContactExDataProvider(ItemTypes.FRIEND);
 
-        adapter = new ContactDataCommonAdapter(rvMain,new ContactsGroupStrategy(), dataProvider) {
+        adapter = new ContactDataExCommonAdapter(rvMain,new ContactsGroupStrategy(), dataProvider) {
             @Override
             protected List<AbsContactItem> onNonDataItems() {
                 if (customization != null) {
@@ -188,6 +189,13 @@ public class ContactsExFragment extends TFragment {
         // ListView
 //        listView = findView(R.id.contact_list_view);
         adapter.addFooterView(countLayout); // 注意：addFooter要放在setAdapter之前，否则旧版本手机可能会add不上
+        // 设置缓存
+        rvMain.setItemViewCacheSize(200);
+// 设置部分或固定的尺寸
+        rvMain.setHasFixedSize(true);
+// 滚动事件派发
+        rvMain.setNestedScrollingEnabled(false);
+        rvMain.setRecycledViewPool(new RecyclerView.RecycledViewPool());
         rvMain.setAdapter(adapter);
 //        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
 //
@@ -399,8 +407,8 @@ public class ContactsExFragment extends TFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGroupChangeEvent(GroupChangeEvent event) {
-                // 加载本地数据
-                reload(true);
+        // 加载本地数据
+        reload(true);
     }
 
     ContactChangedObserver friendDataChangedObserver = new ContactChangedObserver() {

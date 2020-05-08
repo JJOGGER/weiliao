@@ -234,7 +234,7 @@ public class SmsRegistActivity extends UI implements OnKeyListener {
 
                     @Override
                     public void onNext(Long aLong) {
-                        getSms.setText("已发送(" + (60L - aLong) + ")");
+                        getSms.setText("已发送(" + (120L - aLong) + ")");
                     }
 
                     @Override

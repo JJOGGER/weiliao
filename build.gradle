@@ -19,8 +19,8 @@ ext {
     minSdkVersion = 17
     targetSdkVersion = 28
     appTargetSdkVersion = 28
-    versionCode = 5
-    versionName = '1.2.2'
+    versionCode = 6
+    versionName = '1.2.3'
     sdkSourceCompatibility = 1.8
     sdkTargetCompatibility = 1.8
     appSourceCompatibility = 1.8

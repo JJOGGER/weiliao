@@ -122,7 +122,7 @@ final class UserDataProvider {
         });
         Collections.sort(groupTopModels, mComparator);
         for (int i = 0; i < groupTopModels.size(); i++) {
-            items.add(new ContactGroupTopItem(ContactHelper.makeContactFromUserInfo(groupTopModels.get(i).getGroupName()), ItemTypes.GROUP_TOP, groupTopModels.get(i).getItemList()));
+            items.add(new ContactGroupTopItem(ContactHelper.makeContactFromUserInfo(groupTopModels.get(i).getGroupName()), ItemTypes.FRIEND, groupTopModels.get(i).getItemList()));
         }
         LogUtil.i(UIKitLogTag.CONTACT, "contact provide data size =" + items.size());
         return items;
