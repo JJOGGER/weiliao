@@ -99,18 +99,23 @@ public class ContactDataExCommonAdapter extends BaseMultiItemQuickAdapter<AbsCon
                 ContactGroupTopItem groupTopItem = (ContactGroupTopItem) absContactItem;
                 List<ContactItem> contactItems = groupTopItem.getContactItems();
                 int size = contactItems == null ? 0 : contactItems.size();
-                mData.add(new GroupTopItem(groupTopItem.getContact().getDisplayName(), i, size));
+                GroupTopItem item = new GroupTopItem(groupTopItem.getContact().getDisplayName(), i, size);
+                mContactItems.add(item);//添加分组头
+                mData.add(item);
                 if (size == 0)
                     continue;
                 for (int j = 0; j < contactItems.size(); j++) {
-                    contactItems.get(j).setPosition(i);
+                    contactItems.get(j).setPosition(i);//把分组下列表的position绑定为索引i
+                    if (!contactItems.get(j).isHide()) {
+                        mData.add(contactItems.get(j));//不隐藏的条目才添加到data
+                    }
                 }
-                mData.addAll(contactItems);
+                mContactItems.addAll(contactItems);//添加所有
             } else {
                 mData.add(absContactItem);
+                mContactItems.add(absContactItem);
             }
         }
-        mContactItems.addAll(mData);
 //        updateIndexes(datas.getIndexes());
         notifyDataSetChanged();
     }
@@ -120,7 +125,7 @@ public class ContactDataExCommonAdapter extends BaseMultiItemQuickAdapter<AbsCon
         mData.addAll(mContactItems);
         ListIterator<AbsContactItem> listIterator = mData.listIterator();
         while (listIterator.hasNext()) {
-            AbsContactItem absContactItem =listIterator.next();
+            AbsContactItem absContactItem = listIterator.next();
             if (absContactItem.equals(groupTopItem)) {
                 GroupTopItem item = (GroupTopItem) absContactItem;
                 item.setHide(isHide);
@@ -130,9 +135,14 @@ public class ContactDataExCommonAdapter extends BaseMultiItemQuickAdapter<AbsCon
                     continue;
                 }
                 ContactItem contactItem = (ContactItem) absContactItem;
-                if (contactItem.getPosition() == groupTopItem.getPosition()) {
+                if (contactItem.getPosition() == groupTopItem.getPosition()) {//找到对应的组
                     contactItem.setHide(isHide);
                     if (isHide) {
+                        listIterator.remove();
+                    }
+                } else {
+                    //好友不在当前点击的组
+                    if (contactItem.isHide()) {
                         listIterator.remove();
                     }
                 }
