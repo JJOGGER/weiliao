@@ -28,9 +28,25 @@ public class UserDataSource extends BaseRemoteDataSource implements IUserDataSou
     private static List<GroupData> sGroupDatas = new ArrayList<>();//分组信息
 
     @Override
-    public void register(String account, String name, String password, RequestMultiplyCallback<Object> callback) {
+    public void isSmsSwitch(RequestMultiplyCallback<Object> callback) {
+        execute(getService(ApiService.class).isSmsSwitch(), callback);
+
+    }
+
+    @Override
+    public void getSmsCode(String phone, RequestMultiplyCallback<Object> callback) {
+        execute(getService(ApiService.class).sendSmsCode(phone), callback);
+    }
+
+    @Override
+    public void checkSmsCode(String code, String phone, RequestMultiplyCallback<Object> callback) {
+        execute(getService(ApiService.class).checkSmsCode(code, phone), callback);
+    }
+
+    @Override
+    public void register(String phone, String account, String name, String password, RequestMultiplyCallback<Object> callback) {
         password = MD5.getStringMD5(password);
-        execute(getService(ApiService.class).register(account, name, password), callback);
+        execute(getService(ApiService.class).register(phone, account, name, password), callback);
     }
 
     @Override

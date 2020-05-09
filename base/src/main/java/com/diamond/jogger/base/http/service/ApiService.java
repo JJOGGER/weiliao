@@ -35,7 +35,7 @@ public interface ApiService {
     @POST("user/send/code")
     Observable<BaseResponse<Object>> sendSmsCode(@Query("phone") String phone);
 
-    @POST("user/verufy/code")
+    @POST("user/verify/code")
     Observable<BaseResponse<Object>> checkSmsCode(@Query("code") String code,
                                                   @Query("phone") String phone);
 
