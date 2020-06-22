@@ -59,6 +59,7 @@ public class TeamNotificationHelper {
     private static String buildNotification(String tid, String fromAccount, NotificationAttachment attachment) {
         String text;
         switch (attachment.getType()) {
+
             case InviteMember:
             case SUPER_TEAM_INVITE:
                 text = buildInviteMemberNotification(((MemberChangeAttachment) attachment), fromAccount);
@@ -101,7 +102,7 @@ public class TeamNotificationHelper {
                 break;
             case MuteTeamMember:
             case SUPER_TEAM_MUTE_TLIST:
-                text = buildMuteTeamNotification((MuteMemberAttachment) attachment);
+                text = buildMuteTeamNotification((MuteMemberAttachment) attachment, fromAccount);
                 break;
             default:
                 text = getTeamMemberDisplayName(fromAccount) + ": unknown message";
@@ -154,9 +155,14 @@ public class TeamNotificationHelper {
         if (members.size() != 1) {
             for (String account : members) {
                 if (account.equals(NimUIKit.getAccount())) {
-                    containSelf = true;//存在关于自身的信息
+                    containSelf = true;//存在关于自R身的信息
                     sb.append(getTeamMemberDisplayName(account));
                 }
+            }
+        }else{
+            if (members.get(0).equals(NimUIKit.getAccount())) {
+                containSelf = true;//存在关于自身的信息
+                sb.append(getTeamMemberDisplayName(members.get(0)));
             }
         }
         if (team == null) {
@@ -295,16 +301,39 @@ public class TeamNotificationHelper {
         return sb.toString();
     }
 
-    private static String buildMuteTeamNotification(MuteMemberAttachment a) {
+    private static String buildMuteTeamNotification(MuteMemberAttachment a, String fromAccount) {
         Team team = NimUIKit.getTeamProvider().getTeamById(teamId.get());
-        String creator = team.getCreator();
         StringBuilder sb = new StringBuilder();
-        if (!creator.equals(NimUIKit.getAccount())) {
+        ArrayList<String> members = a.getTargets();
+        boolean containSelf = false;
+        if (members.size() != 1) {
+            for (String account : members) {
+                if (account.equals(NimUIKit.getAccount())) {
+                    containSelf = true;//存在关于自身的信息
+                    sb.append(getTeamMemberDisplayName(account));
+                }
+            }
+        }else{
+            if (members.get(0).equals(NimUIKit.getAccount())) {
+                containSelf = true;//存在关于自身的信息
+                sb.append(getTeamMemberDisplayName(members.get(0)));
+            }
+        }
+        if (team == null) {
+            sb.append(" 已被移出群,无法接收新消息");
+            return sb.toString();
+        }
+        String creator = team.getCreator();
+        if (!creator.equals(NimUIKit.getAccount()) && !containSelf) {
             //当前不是群主且不是被禁言人，不显示正确信息
             sb.append("群消息更新");
+        } else if (containSelf) {
+            sb.append("已被管理员");
+            sb.append(a.isMute() ? "禁言" : "解除禁言");
+            return sb.toString();
         } else {
             sb.append(buildMemberListString(a.getTargets(), null));
-            sb.append("被管理员");
+            sb.append("已被管理员");
             sb.append(a.isMute() ? "禁言" : "解除禁言");
         }
         return sb.toString();

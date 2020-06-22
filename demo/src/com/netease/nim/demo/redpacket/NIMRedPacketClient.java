@@ -109,7 +109,7 @@ public class NIMRedPacketClient {
 
 
     public static boolean isEnable() {
-        return BuildConfig.VERSION_CODE == 4;
+        return true;
     }
 
     private static boolean checkValid() {

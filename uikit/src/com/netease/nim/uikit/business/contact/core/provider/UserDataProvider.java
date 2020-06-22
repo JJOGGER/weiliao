@@ -111,15 +111,6 @@ final class UserDataProvider {
             groupTopModel.setItemList(list);
             groupTopModels.add(groupTopModel);
         }
-
-
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                ClipboardManager cmb = (ClipboardManager) NimUIKit.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                cmb.setText(sContent);
-            }
-        });
         Collections.sort(groupTopModels, mComparator);
         for (int i = 0; i < groupTopModels.size(); i++) {
             items.add(new ContactGroupTopItem(ContactHelper.makeContactFromUserInfo(groupTopModels.get(i).getGroupName()), ItemTypes.FRIEND, groupTopModels.get(i).getItemList()));
@@ -128,7 +119,6 @@ final class UserDataProvider {
         return items;
     }
 
-    private static Handler mHandler = new Handler(Looper.getMainLooper());
     private static Comparator mComparator = new Comparator<GroupTopModel>() {
         @Override
         public int compare(GroupTopModel o1, GroupTopModel o2) {

@@ -27,6 +27,8 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        manifestPlaceholders = [APP_NAME: '微聊'] // 配置主包的应用名称
+
     }
     signingConfigs {
         debug {
@@ -42,6 +44,12 @@ android {
             keyPassword RELEASE_KEY_PASSWORD
             storePassword RELEASE_STORE_PASSWORD
         }
+        // 第一个马甲包
+//        majiabaoOne.initWith(buildTypes.release) // 以release的配置来初始化马甲包配置
+//        majiabaoOne {
+//            applicationIdSuffix ".majiabaoOne" // 修改马甲包的applicationId，马甲包的application将为com.liunian.majiabaotest.majiabaoOne，即在原来的applicationId后加上配置内容
+//            manifestPlaceholders = [APP_NAME: '微聊分支'] // 配置马甲包的应用名称
+//           }
     }
     lintOptions {
         checkReleaseBuilds false
