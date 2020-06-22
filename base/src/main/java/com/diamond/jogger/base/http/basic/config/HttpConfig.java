@@ -25,6 +25,7 @@ public class HttpConfig {
 //    }
     public static String getDynamicUrl() {
 //        return "http://yunxin777.com:8080/im/";
-        return "http://wl2013.com:8082/im/";
+//        return "http://wl2013.com:8082/im/";
+        return "http://liaobas.com:8084/im/";
     }
 }

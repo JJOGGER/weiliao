@@ -8,6 +8,7 @@ import com.diamond.jogger.base.entity.GroupAuth;
 import com.diamond.jogger.base.entity.GroupData;
 import com.diamond.jogger.base.entity.IntoRecordResponse;
 import com.diamond.jogger.base.entity.LoginResult;
+import com.diamond.jogger.base.entity.MessageSwitch;
 import com.diamond.jogger.base.entity.RedPacketStatusResponse;
 import com.diamond.jogger.base.entity.SendRedPacketResponse;
 import com.diamond.jogger.base.entity.SignData;
@@ -30,7 +31,7 @@ import retrofit2.http.Query;
 public interface ApiService {
 
     @POST("user/message/switch")
-    Observable<BaseResponse<Object>> isSmsSwitch();
+    Observable<BaseResponse<MessageSwitch>> isSmsSwitch();
 
     @POST("user/send/code")
     Observable<BaseResponse<Object>> sendSmsCode(@Query("phone") String phone);

@@ -16,6 +16,7 @@ public class Preferences {
     private static final String KEY_VERSION_ID = "version_id";
     private static final String KEY_USER_INFO = "user_info";
     private static final String KEY_TAB_WEB_SITE = "tab_web_site";
+    private static final String KEY_MESSAGE_SWITCH_FLAG = "key_message_switch_flag";
 
     public static void saveUserAccount(String account) {
         saveString(KEY_USER_ACCOUNT, account);
@@ -77,12 +78,22 @@ public class Preferences {
         editor.commit();
     }
 
+    private static void saveBoolean(String key, boolean value) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
+
     private static long getLong(String key) {
         return getSharedPreferences().getLong(key, 0);
     }
 
     private static String getString(String key) {
         return getSharedPreferences().getString(key, null);
+    }
+
+    private static boolean getBoolean(String key) {
+        return getSharedPreferences().getBoolean(key, false);
     }
 
     static SharedPreferences getSharedPreferences() {
@@ -95,5 +106,13 @@ public class Preferences {
 
     public static String getTabWebSite() {
         return getString(KEY_TAB_WEB_SITE);
+    }
+
+    public static boolean isMessageSwitchFlag() {
+        return getBoolean(KEY_MESSAGE_SWITCH_FLAG);
+    }
+
+    public static void setMessageSwitchFlag(boolean messageSwitchFlag) {
+        saveBoolean(KEY_MESSAGE_SWITCH_FLAG, messageSwitchFlag);
     }
 }

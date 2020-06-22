@@ -6,6 +6,7 @@ import com.diamond.jogger.base.entity.AccountResult;
 import com.diamond.jogger.base.entity.GroupAuth;
 import com.diamond.jogger.base.entity.GroupData;
 import com.diamond.jogger.base.entity.LoginResult;
+import com.diamond.jogger.base.entity.MessageSwitch;
 import com.diamond.jogger.base.entity.SimpleUserInfo;
 import com.diamond.jogger.base.entity.VersionInfo;
 import com.diamond.jogger.base.http.basic.callback.RequestMultiplyCallback;
@@ -13,7 +14,7 @@ import com.diamond.jogger.base.http.basic.callback.RequestMultiplyCallback;
 import java.util.List;
 
 public interface IUserDataSource {
-    void isSmsSwitch(RequestMultiplyCallback<Object> callback);
+    void isSmsSwitch(RequestMultiplyCallback<MessageSwitch> callback);
 
     void getSmsCode(String phone, RequestMultiplyCallback<Object> callback);
 

@@ -231,7 +231,11 @@ public class LoginActivity extends UI implements OnKeyListener {
             login();
         });
         btnRegist.setOnClickListener(v -> {
-            startActivity(new Intent(this, RegistActivity.class));
+            if (DemoCache.isMessageSwitchFlag()) {
+                startActivity(new Intent(this, SmsRegistActivity.class));
+            } else {
+                startActivity(new Intent(this, RegistActivity.class));
+            }
         });
         tvWeChat.setOnClickListener(v -> {
             if (!api.isWXAppInstalled()) {

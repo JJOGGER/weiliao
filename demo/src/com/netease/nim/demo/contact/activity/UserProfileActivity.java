@@ -305,13 +305,13 @@ public class UserProfileActivity extends UI {
     }
 
     private void updateUserOperatorView() {
-        chatBtn.setVisibility(View.VISIBLE);
+//        chatBtn.setVisibility(View.VISIBLE);
         if (NIMClient.getService(FriendService.class).isMyFriend(accid)) {
-            removeFriendBtn.setVisibility(View.VISIBLE);
+//            removeFriendBtn.setVisibility(View.VISIBLE);
             addFriendBtn.setVisibility(View.GONE);
             updateAlias(true);
         } else {
-            addFriendBtn.setVisibility(View.VISIBLE);
+//            addFriendBtn.setVisibility(View.VISIBLE);
             removeFriendBtn.setVisibility(View.GONE);
             updateAlias(false);
         }

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.alibaba.fastjson.JSON;
+import com.diamond.jogger.base.entity.MessageSwitch;
 import com.diamond.jogger.base.http.basic.callback.RequestMultiplyCallback;
 import com.diamond.jogger.base.http.basic.exception.base.BaseException;
 import com.diamond.jogger.base.http.datasource.UserDataSource;
@@ -152,14 +153,16 @@ public class WelcomeActivity extends UI {
 
         if (firstEnter) {
             firstEnter = false;
-            mUserDataSource.isSmsSwitch(new RequestMultiplyCallback<Object>() {
+            mUserDataSource.isSmsSwitch(new RequestMultiplyCallback<MessageSwitch>() {
                 @Override
                 public void onFail(BaseException e) {
+                    DemoCache.setMessageSwitchFlag(false);
                     init();
                 }
 
                 @Override
-                public void onSuccess(Object o) {
+                public void onSuccess(MessageSwitch messageSwitch) {
+                    DemoCache.setMessageSwitchFlag(messageSwitch.isMessageSwitchFlag());
                     init();
                 }
             });

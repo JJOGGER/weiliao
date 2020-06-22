@@ -1,7 +1,10 @@
 package com.netease.nim.uikit.business.session.viewholder;
 
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.netease.nim.uikit.R;
@@ -37,6 +40,9 @@ public class MsgViewHolderNotification extends MsgViewHolderBase {
     }
 
     private void handleTextNotification(String text) {
+        if (TextUtils.isEmpty(text)) {
+            text = "";
+        }
         MoonUtil.identifyFaceExpressionAndATags(context, notificationTextView, text, ImageSpan.ALIGN_BOTTOM);
         notificationTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }

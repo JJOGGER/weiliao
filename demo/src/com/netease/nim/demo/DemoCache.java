@@ -20,6 +20,8 @@ public class DemoCache {
     private static String serverAccount;
     private static SimpleUserInfo simpleUserInfo;
     private static String tabWebSite;
+    private static boolean messageSwitchFlag;
+    ;
 
     private static StatusBarNotificationConfig notificationConfig;
 
@@ -109,4 +111,15 @@ public class DemoCache {
     }
 
 
+    public static boolean isMessageSwitchFlag() {
+        if (!messageSwitchFlag) {
+            return Preferences.isMessageSwitchFlag();
+        }
+        return messageSwitchFlag;
+    }
+
+    public static void setMessageSwitchFlag(boolean messageSwitchFlag) {
+        DemoCache.messageSwitchFlag = messageSwitchFlag;
+        Preferences.setMessageSwitchFlag(messageSwitchFlag);
+    }
 }

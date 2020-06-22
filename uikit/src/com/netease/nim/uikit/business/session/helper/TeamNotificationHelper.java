@@ -1,6 +1,7 @@
 package com.netease.nim.uikit.business.session.helper;
 
 import android.text.TextUtils;
+import android.view.View;
 
 import com.netease.nim.uikit.R;
 import com.netease.nim.uikit.api.NimUIKit;
@@ -17,6 +18,7 @@ import com.netease.nimlib.sdk.team.model.MuteMemberAttachment;
 import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.team.model.UpdateTeamAttachment;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -145,13 +147,38 @@ public class TeamNotificationHelper {
     }
 
     private static String buildKickMemberNotification(MemberChangeAttachment a) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(buildMemberListString(a.getTargets(), null));
         Team team = NimUIKit.getTeamProvider().getTeamById(teamId.get());
-        if (team == null || team.getType() == TeamTypeEnum.Advanced) {
+        StringBuilder sb = new StringBuilder();
+        ArrayList<String> members = a.getTargets();
+        boolean containSelf = false;
+        if (members.size() != 1) {
+            for (String account : members) {
+                if (account.equals(NimUIKit.getAccount())) {
+                    containSelf = true;//存在关于自身的信息
+                    sb.append(getTeamMemberDisplayName(account));
+                }
+            }
+        }
+        if (team == null) {
             sb.append(" 已被移出群");
+            return sb.toString();
+        }
+        String creator = team.getCreator();
+        if (!creator.equals(NimUIKit.getAccount()) && !containSelf) {
+            //当前不是群主且不是被禁言人，不显示正确信息
+            sb.append("群消息更新");
+        } else if (containSelf) {
+            if (team.getType() == TeamTypeEnum.Advanced) {
+                sb.append(" 已被移出群");
+                return sb.toString();
+            }
         } else {
-            sb.append(" 已被移出讨论组");
+            sb.append(buildMemberListString(a.getTargets(), null));
+            if (team.getType() == TeamTypeEnum.Advanced) {
+                sb.append(" 已被移出群");
+            } else {
+                sb.append(" 已被移出讨论组");
+            }
         }
 
         return sb.toString();
@@ -269,12 +296,17 @@ public class TeamNotificationHelper {
     }
 
     private static String buildMuteTeamNotification(MuteMemberAttachment a) {
+        Team team = NimUIKit.getTeamProvider().getTeamById(teamId.get());
+        String creator = team.getCreator();
         StringBuilder sb = new StringBuilder();
-
-        sb.append(buildMemberListString(a.getTargets(), null));
-        sb.append("被管理员");
-        sb.append(a.isMute() ? "禁言" : "解除禁言");
-
+        if (!creator.equals(NimUIKit.getAccount())) {
+            //当前不是群主且不是被禁言人，不显示正确信息
+            sb.append("群消息更新");
+        } else {
+            sb.append(buildMemberListString(a.getTargets(), null));
+            sb.append("被管理员");
+            sb.append(a.isMute() ? "禁言" : "解除禁言");
+        }
         return sb.toString();
     }
 }

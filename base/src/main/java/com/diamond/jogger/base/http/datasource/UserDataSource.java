@@ -8,6 +8,7 @@ import com.diamond.jogger.base.entity.AccountResult;
 import com.diamond.jogger.base.entity.GroupAuth;
 import com.diamond.jogger.base.entity.GroupData;
 import com.diamond.jogger.base.entity.LoginResult;
+import com.diamond.jogger.base.entity.MessageSwitch;
 import com.diamond.jogger.base.entity.SimpleUserInfo;
 import com.diamond.jogger.base.entity.VersionInfo;
 import com.diamond.jogger.base.http.basic.BaseRemoteDataSource;
@@ -28,7 +29,7 @@ public class UserDataSource extends BaseRemoteDataSource implements IUserDataSou
     private static List<GroupData> sGroupDatas = new ArrayList<>();//分组信息
 
     @Override
-    public void isSmsSwitch(RequestMultiplyCallback<Object> callback) {
+    public void isSmsSwitch(RequestMultiplyCallback<MessageSwitch> callback) {
         execute(getService(ApiService.class).isSmsSwitch(), callback);
 
     }
