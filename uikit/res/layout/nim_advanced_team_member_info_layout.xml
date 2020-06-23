@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -60,8 +60,8 @@
         android:id="@+id/nickname_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp">
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
 
         <TextView
             android:id="@+id/team_nickname"
@@ -79,8 +79,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
             android:layout_toRightOf="@id/team_nickname"
-            android:drawablePadding="5dp"
             android:drawableRight="@drawable/nim_arrow_right"
+            android:drawablePadding="5dp"
             android:gravity="right|center_vertical"
             android:hint="@string/team_nickname_none"
             android:textColor="@color/grey"
@@ -96,8 +96,8 @@
         android:id="@+id/identity_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="15dp"
-        android:paddingTop="15dp">
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp">
 
         <TextView
             android:id="@+id/team_member_identity"
@@ -115,8 +115,8 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
             android:layout_toRightOf="@id/team_member_identity"
-            android:drawablePadding="5dp"
             android:drawableRight="@drawable/nim_arrow_right"
+            android:drawablePadding="5dp"
             android:gravity="right|center_vertical"
             android:hint="@string/team_nickname_none"
             android:textColor="@color/grey"
@@ -140,13 +140,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginTop="25dp"
+        android:layout_marginRight="10dp"
         android:background="@drawable/nim_red_round_button_selector"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:text="@string/remove_member"
-        android:textSize="17sp"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="17sp" />
 </LinearLayout>

@@ -311,7 +311,7 @@ public class UserProfileActivity extends UI {
             addFriendBtn.setVisibility(View.GONE);
             updateAlias(true);
         } else {
-//            addFriendBtn.setVisibility(View.VISIBLE);
+            addFriendBtn.setVisibility(View.VISIBLE);
             removeFriendBtn.setVisibility(View.GONE);
             updateAlias(false);
         }
