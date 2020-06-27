@@ -1,10 +1,12 @@
 package com.netease.nim.uikit.business.session.viewholder;
 
+import android.os.Trace;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.TextView;
 
 import com.netease.nim.uikit.R;
